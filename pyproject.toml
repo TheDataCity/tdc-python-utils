@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tdc-python-utils"
-version = "0.0.1"
+version = "0.0.2"
 
 authors = [
   { name="The Data City", email="luke.strange@thedatacity.com" },
@@ -28,6 +28,12 @@ classifiers = [
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 dependencies = [
+    "azure-storage-blob>=12.27.1",
+    "dotenv>=0.9.9",
+    "duckdb>=1.4.3",
+    "polars>=1.36.1",
+    "ruff>=0.14.10",
+    "tqdm>=4.67.1",
     "twine>=6.2.0",
 ]
 
