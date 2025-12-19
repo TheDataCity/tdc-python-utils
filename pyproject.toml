@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tdc-python-utils"
+version = "0.0.1"
+
+authors = [
+  { name="The Data City", email="luke.strange@thedatacity.com" },
+]
+
+maintainers = [
+  { name="Luke Strange", email="luke.strange@thedatacity.com" },
+]
+
+description = "A python utility package for The Data City"
+
+readme = "README.md"
+
+requires-python = ">=3.9"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+dependencies = [
+    "twine>=6.2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/TheDataCity/tdc-python-utils"
+Issues = "https://github.com/TheDataCity/tdc-python-utils/issues"
+
+[tool.hatch.build.targets.wheel]
+sources = ["src"]
