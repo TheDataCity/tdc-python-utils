@@ -29,6 +29,7 @@ license = "MIT"
 license-files = ["LICEN[CS]E*"]
 dependencies = [
     "azure-storage-blob>=12.27.1",
+    "colorama>=0.4.6",
     "dotenv>=0.9.9",
     "duckdb>=1.4.3",
     "polars>=1.36.1",

@@ -779,6 +779,7 @@ version = "0.0.2"
 source = { editable = "." }
 dependencies = [
     { name = "azure-storage-blob" },
+    { name = "colorama" },
     { name = "dotenv" },
     { name = "duckdb" },
     { name = "polars" },
@@ -790,6 +791,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "azure-storage-blob", specifier = ">=12.27.1" },
+    { name = "colorama", specifier = ">=0.4.6" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "duckdb", specifier = ">=1.4.3" },
     { name = "polars", specifier = ">=1.36.1" },
