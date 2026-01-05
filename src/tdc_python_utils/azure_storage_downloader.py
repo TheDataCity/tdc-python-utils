@@ -15,16 +15,18 @@ class AzureStorageDownloader:
         self.container_name = container_name
         pass
 
-    def download_file(self, target_blob:str, target_path:str, local_dir:str) -> None:
+    def download_file(self, target_blob:str, target_path:str, local_dir:str, local_filename:str = None) -> None:
         """
         Download a single file from Azure blob storage.
         
         :param target_blob: The blob you want to download (the name of the file including the extension)
         :type target_blob: str
-        :param target_path: Description The path to the blob you want to download
+        :param target_path: The path to the blob you want to download
         :type target_path: str
-        :param local_dir: Description The local directory to save the file to
-        :type local_dir: str
+        :param local_dir: The local directory to save the file to
+        :type local_dir: str 
+        :param local_filename: Optionally rename the local copy of the file
+        :type local_filename: str
         """
         # Ensure local directory exists
         os.makedirs(local_dir, exist_ok=True)
@@ -43,8 +45,10 @@ class AzureStorageDownloader:
         blob_props = blob_client.get_blob_properties()
         total_size = blob_props.size
 
+        output_path = local_dir / local_filename if local_filename else local_dir / target_blob # Use local_filename if given.
+
         # Download with progress bar
-        with open(local_dir / target_blob, "wb") as f, tqdm(total=total_size, unit='B', unit_scale=True, desc=target_blob) as pbar:
+        with open(output_path, "wb") as f, tqdm(total=total_size, unit='B', unit_scale=True, desc=target_blob) as pbar:
             stream = blob_client.download_blob(max_concurrency=2)
             for chunk in stream.chunks():
                 f.write(chunk)
