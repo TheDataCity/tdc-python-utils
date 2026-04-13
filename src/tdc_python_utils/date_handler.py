@@ -8,7 +8,7 @@ class DateHandler:
         self.prev_month_year = self.first_of_prev_month.strftime("%b%Y")
         pass
     
-    def now(format:str = "%b%Y", **delta:timedelta) -> str:
+    def now(self, format:str = "%b%Y", **delta:timedelta) -> str:
         """
         Helper function to return the current time (or timedelta from now) in the specified format.
         
