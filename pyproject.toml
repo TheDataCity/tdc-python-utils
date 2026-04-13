@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tdc-python-utils"
-version = "0.0.6"
+version = "0.0.7"
 
 authors = [
   { name="The Data City", email="luke.strange@thedatacity.com" },
@@ -33,6 +33,7 @@ dependencies = [
     "dotenv>=0.9.9",
     "duckdb>=1.5.1",
     "polars>=1.36.1",
+    "python-dateutil>=2.9.0.post0",
     "ruff>=0.14.10",
     "tqdm>=4.67.1",
     "twine>=6.2.0",
