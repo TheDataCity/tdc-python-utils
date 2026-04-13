@@ -60,7 +60,7 @@ class AzureStorageDownloader:
 
         if latest is None:
             print(f"[WARNING]: No matching blobs found in '{self.container_name}' with prefix '{prefix}'. \
-                  Available blobs: {[b["name"] for b in self.container_client.list_blobs()]}")
+                  Available blobs: {[b['name'] for b in self.container_client.list_blobs()]}")
             return ""
 
         return latest[0]
