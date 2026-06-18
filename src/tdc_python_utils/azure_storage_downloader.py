@@ -86,8 +86,8 @@ class AzureStorageDownloader:
         blobs = [blob.name for blob in self.container_client.list_blobs()]
 
         if not blobs:
-            print("No files found in Azure container.")
-            exit(0)
+            print(f"No files found in Azure container: {self.container_name}.")
+            return None
 
         # Get blob properties to know the size
         blob_client = self.container_client.get_blob_client(
@@ -120,3 +120,4 @@ class AzureStorageDownloader:
             print("Download complete!")
         else:
             print(f"File already exists: {output_path}")
+        return output_path
