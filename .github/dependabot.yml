@@ -1,0 +1,16 @@
+# Generated from pipelines/dependabot golden templates.
+version: 2
+updates:
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(uv)"
+    groups:
+      uv-deps:
+        patterns:
+          - "*"
+
