@@ -22,6 +22,12 @@ jobs:
           fetch-tags: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.0.1
+      
+      - name: Setup environment
+        run: uv sync --frozen
+
       - name: Get package version
         id: package-version
         run: echo "version=$(uv version --short)" >> "$GITHUB_OUTPUT"
