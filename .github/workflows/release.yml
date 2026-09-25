@@ -17,10 +17,15 @@ jobs:
         persist-credentials: false
 
     - name: Setup Python
-      uses: TheDataCity/github-actions/.github/actions/setup-python-uv@v1
+      uses: actions/setup-python@v7
       with:
         python-version: 3.13
-        uv-sync-args: "--frozen"
+
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v10.0.1
+      
+    - name: Setup environment
+      run: uv sync --frozen
 
     - name: Ruff format and fix
       id: lint
@@ -50,7 +55,7 @@ jobs:
       if: steps.lint.outcome == 'success'
       uses: TheDataCity/github-actions/.github/actions/git-commit-and-push@v1
       with:
-        message: "style: ruff formatting"
+        message: "style(auto): ruff formatting"
         token: ${{ secrets.GITHUB_TOKEN }}
         paths: |
             src
