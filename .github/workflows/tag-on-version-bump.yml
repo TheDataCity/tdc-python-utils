@@ -1,0 +1,53 @@
+# .github/workflows/tag-on-version-bump.yml
+name: tag-on-version-bump
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths: 
+      - pyproject.toml        # only fire when this file changed
+      - .github/workflows/tag-on-version-bump.yml
+
+permissions:
+  contents: write                  # required to push the tag back
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0           # full history + all tags
+          fetch-tags: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get package version
+        id: package-version
+        run: echo "version=$(uv version --short)" >> "$GITHUB_OUTPUT"
+
+      - name: Skip if tag already exists
+        id: check
+        run: |
+          TAG="v${{ steps.package-version.outputs.version }}"
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::$TAG exists — version wasn't bumped this push. Nothing to tag."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify built version matches declared version
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          uv build
+          V="${{ steps.package-version.outputs.version }}"
+          ls dist/*-"$V"-*.whl >/dev/null 2>&1 \
+            || { echo "::error::built artifact version != pyproject version $V"; exit 1; }
+
+      - name: Create and push tag
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          TAG="v${{ steps.package-version.outputs.version }}"
+          git tag -a "$TAG" -m "$TAG"
+          git push origin "$TAG"
