@@ -13,15 +13,12 @@ load_dotenv()
 
 
 class R2StorageDownloader:
-    def __init__(self, container_name: str):
+    def __init__(self, bucket: str, container_name: str):
         key = os.environ.get("R2_ACCESS_KEY_ID", "")
         secret = os.environ.get("R2_SECRET_ACCESS_KEY", "")
         account = os.environ.get("R2_ACCOUNT_ID", "")
-        bucket = os.environ.get("R2_BUCKET", "")
-        if not key or not secret or not account or not bucket:
-            raise KeyError(
-                "Set R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_ACCOUNT_ID, R2_BUCKET"
-            )
+        if not key or not secret or not account:
+            raise KeyError("Set R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_ACCOUNT_ID")
         endpoint = os.environ.get(
             "R2_ENDPOINT_URL", f"https://{account}.r2.cloudflarestorage.com"
         )
@@ -119,7 +116,7 @@ class R2StorageDownloader:
         - force: (Default=False). Download even if a local file already exists.
         """
         os.makedirs(local_dir, exist_ok=True)
-        key = self._key(target_path, target_blob)
+        key = self._key(target_blob)
         output_path = (
             Path(local_dir) / local_filename
             if local_filename
