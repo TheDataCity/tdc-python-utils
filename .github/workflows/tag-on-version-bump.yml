@@ -55,5 +55,7 @@ jobs:
         if: steps.check.outputs.exists == 'false'
         run: |
           TAG="v${{ steps.package-version.outputs.version }}"
+          git config user.name  "thedatacitybot"
+          git config user.email "thedatacitybot@users.noreply.github.com"
           git tag -a "$TAG" -m "$TAG"
           git push origin "$TAG"
