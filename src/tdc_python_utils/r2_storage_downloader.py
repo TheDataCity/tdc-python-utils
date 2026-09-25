@@ -140,7 +140,6 @@ class R2StorageDownloader:
             raise FileNotFoundError(key) from exc
 
         total_size = int(head["ContentLength"])
-        transferred = {"n": 0}
         with (
             open(output_path, "wb") as f,
             tqdm(
@@ -151,12 +150,11 @@ class R2StorageDownloader:
                 mininterval=1,
             ) as pbar,
         ):
-
-            def _cb(bytes_transferred: int) -> None:
-                pbar.update(bytes_transferred - transferred["n"])
-                transferred["n"] = bytes_transferred
-
-            self.client.download_fileobj(self.bucket, key, f, Callback=_cb)
+            response = self.client.get_object(Bucket=self.bucket, Key=key)
+            body = response["Body"]
+            while chunk := body.read(1024 * 1024):
+                f.write(chunk)
+                pbar.update(len(chunk))
         logger.info("Download complete!")
 
 
