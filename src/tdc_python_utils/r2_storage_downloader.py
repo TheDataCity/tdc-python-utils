@@ -102,18 +102,24 @@ class R2StorageDownloader:
 
         return latest[0]
 
-    def download_file(
-        self, target_blob, target_path, local_dir, local_filename=None, force=False
-    ):
+    def download_file(self, target_blob, local_dir, local_filename=None, force=False):
         """
         Download a named object from the container prefix.
+        If the resulting download path already exists locally, then no download will occur.
+        Set force=True to always download.
 
-        Parameters:
-        - target_blob: name of the object (file) to download
-        - target_path: path within the container prefix
-        - local_dir: local directory path to save output file
-        - local_filename: Optional renaming of target file
-        - force: (Default=False). Download even if a local file already exists.
+        Args:
+            target_blob: full path to the object (file) to download (not including the bucket name)
+            local_dir: local directory path to save output file
+            local_filename: Optional renaming of target file
+            force: (Default=False). Download even if a local file already exists.
+
+        Usage:
+            ```
+            R2StorageDownloader(container_name="creditsafe/output").download_file(
+                    target_blob="WebsiteInfo.csv", local_dir="tests", force=True
+                )
+            ```
         """
         os.makedirs(local_dir, exist_ok=True)
         key = self._key(target_blob)
