@@ -1,0 +1,57 @@
+name: Publish to TestPyPI
+
+on:
+    workflow_dispatch: {}
+    push:
+        branches: [main]
+        paths:
+            - pyproject.toml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        persist-credentials: false
+
+    - name: Setup Python
+      uses: TheDataCity/github-actions/.github/actions/setup-python-uv@v1
+      with:
+        python-version: 3.13
+        uv-sync-args: "--frozen"
+
+    - name: Ruff format and fix
+      id: lint
+      continue-on-error: false
+      run: |
+        uv run ruff format src
+        uv run ruff check src --fix
+
+    - name: Get package version
+      id: package-version
+      run: echo "version=$(uv version --short)" >> "$GITHUB_OUTPUT"
+
+    - name: Build package
+      run: uv build
+
+    - name: Publish to TestPyPI
+      continue-on-error: true
+      env:
+        UV_PUBLISH_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+      run: |
+        VERSION="${{ steps.package-version.outputs.version }}"
+        uv publish \
+        "dist/tdc_python_utils-${VERSION}-"* \
+        --publish-url https://test.pypi.org/legacy/
+
+    - name: Commit and push
+      if: steps.lint.outcome == 'success'
+      uses: TheDataCity/github-actions/.github/actions/git-commit-and-push@v1
+      with:
+        message: "style: ruff formatting"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        paths: |
+            src
+      
