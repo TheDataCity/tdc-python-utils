@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tdc-python-utils"
-version = "0.0.11"
+version = "0.0.13.dev1"
 
 authors = [
   { name="The Data City", email="luke.strange@thedatacity.com" },
@@ -28,13 +28,13 @@ classifiers = [
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 dependencies = [
-    "azure-storage-blob>=12.27.1",
+    "boto3>=1.43.102",
     "colorama>=0.4.6",
     "dotenv>=0.9.9",
     "duckdb>=1.5.1",
+    "loguru>=0.7.3",
     "polars>=1.36.1",
     "python-dateutil>=2.9.0.post0",
-    "ruff>=0.14.10",
     "tqdm>=4.67.1",
     "twine>=6.2.0",
 ]
@@ -45,3 +45,8 @@ Issues = "https://github.com/TheDataCity/tdc-python-utils/issues"
 
 [tool.hatch.build.targets.wheel]
 sources = ["src"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.9",
+]

@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 from tdc_python_utils.colours import highlight_text
 
+
 def download_zipfile_from_url(url, save_to: str | Path):
     if Path(save_to).exists():
         print(f"{save_to} already exists. Skipping download")

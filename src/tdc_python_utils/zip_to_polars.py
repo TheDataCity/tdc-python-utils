@@ -1,11 +1,13 @@
-from zipfile import ZipFile
 from pathlib import Path
+from zipfile import ZipFile
+
 import polars as pl
+
 
 def zip_to_polars(path: Path | str, file_format="csv", **kwargs) -> pl.DataFrame:
     """
     Docstring for zip_to_polars
-    
+
     :param path: path to the source file
     :type path: Path | str
     :param file_format: csv or parquet

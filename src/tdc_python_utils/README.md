@@ -38,10 +38,12 @@ Use the timer decorator:
 ```python
 from tdc_python_utils.timer import execution_time
 
+
 @execution_time
 def work():
     # do work
     return 123
+
 
 work()
 ```

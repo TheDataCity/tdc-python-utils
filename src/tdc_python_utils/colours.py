@@ -3,16 +3,17 @@ from colorama import Fore, Style, init
 init(autoreset=True)
 
 colors = {
-        "red": Fore.RED,
-        "green": Fore.GREEN,
-        "yellow": Fore.YELLOW,
-        "blue": Fore.BLUE,
-        "magenta": Fore.MAGENTA,
-        "cyan": Fore.CYAN,
-        "white": Fore.WHITE
-    }
+    "red": Fore.RED,
+    "green": Fore.GREEN,
+    "yellow": Fore.YELLOW,
+    "blue": Fore.BLUE,
+    "magenta": Fore.MAGENTA,
+    "cyan": Fore.CYAN,
+    "white": Fore.WHITE,
+}
 
-def highlight_text(message:str, text:str, color:str = "cyan"):
+
+def highlight_text(message: str, text: str, color: str = "cyan"):
     """Return `message` with all occurrences of `text` wrapped in ANSI
     colour codes.
 
@@ -40,10 +41,11 @@ def highlight_text(message:str, text:str, color:str = "cyan"):
     """
     message = str(message)
     text = str(text)
-    
+
     color_code = colors.get(color.lower(), Fore.RESET)
     return message.replace(text, f"{color_code}{text}{Style.RESET_ALL}")
 
-def highlight_all(message:str, color:str = "cyan"):
+
+def highlight_all(message: str, color: str = "cyan"):
     color_code = colors.get(color.lower(), Fore.RESET)
     return message.replace(message, f"{color_code}{message}{Style.RESET_ALL}")
