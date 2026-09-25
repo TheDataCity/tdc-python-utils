@@ -1,4 +1,3 @@
-
 """Utility helpers used across TDC projects.
 
 This package provides small convenience utilities for downloading,
@@ -7,12 +6,12 @@ compressed data into Polars and connecting to DuckDB.
 """
 
 __all__ = [
-	"azure_storage_downloader",
-	"colours",
-	"date_handler",
-	"duckdb_connector",
-	"paths",
-	"timer",
-	"url_downloader",
-	"zip_to_polars",
+    "colours",
+    "date_handler",
+    "duckdb_connector",
+    "paths",
+    "r2_storage_downloader",
+    "timer",
+    "url_downloader",
+    "zip_to_polars",
 ]
