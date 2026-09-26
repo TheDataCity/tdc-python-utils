@@ -1,6 +1,26 @@
 # Generated from pipelines/dependabot golden templates.
 version: 2
 updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(CI)"
+    # Floating @v1/@v2 tags; only open PRs on major bumps for our shared actions.
+    # Third-party actions (actions/checkout, etc.) still get minor/patch updates.
+    ignore:
+      - dependency-name: "TheDataCity/github-actions*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+    groups:
+      github-actions-deps:
+        patterns:
+          - "*"
+
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
