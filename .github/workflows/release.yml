@@ -16,17 +16,11 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: Setup Python
-      uses: actions/setup-python@v7
+    - name: Install Python dependencies
+      uses: TheDataCity/github-actions/.github/actions/setup-python-uv@v1
       with:
-        python-version: 3.13
-
-    - name: Setup uv
-      uses: astral-sh/setup-uv@v10.0.1
-      
-    - name: Setup environment
-      run: uv sync --frozen
-
+        python-version: "3.13"
+        uv-sync-args: --frozen
     - name: Ruff format and fix
       id: lint
       continue-on-error: false
@@ -53,7 +47,8 @@ jobs:
 
     - name: Commit and push
       if: steps.lint.outcome == 'success'
-      uses: stefanzweifel/git-auto-commit-action@v7.2.0
+      uses: TheDataCity/github-actions/.github/actions/git-commit-and-push@v1
       with:
-        commit_message: "style(auto): ruff formatting"
-        file_pattern: "src/*.py"
+        message: "style(auto): ruff formatting"
+        paths: src/*.py
+        token: ${{ secrets.GITHUB_TOKEN }}

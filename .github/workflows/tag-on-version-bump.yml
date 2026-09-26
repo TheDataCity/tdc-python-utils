@@ -23,11 +23,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v10.0.1
-      
-      - name: Setup environment
-        run: uv sync --frozen
-
+        uses: TheDataCity/github-actions/.github/actions/setup-python-uv@v1
+        with:
+          python-version: "3.12"
+          uv-sync-args: --frozen
       - name: Get package version
         id: package-version
         run: echo "version=$(uv version --short)" >> "$GITHUB_OUTPUT"
