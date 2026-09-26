@@ -1,0 +1,78 @@
+# Generated from internal-watchmen templates/pre-commit fragments.
+# Do not edit hook lists here by hand for structure — edit
+# templates/pre-commit/{base,python,github-actions,local-pytest}.yml
+# then: python3 scripts/lib/pre_commit_templates.py assemble --write
+# Dependabot bumps rev pins in this file; then: python3 scripts/lib/pre_commit_templates.py sync-revs
+
+repos:
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: []
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        # .mdx as well as .md: a line ending in two spaces is a Markdown hard
+        # line break, and MDX docs sites rely on them. Stripping the spaces
+        # merges the lines on the rendered page.
+        exclude: \.(md|mdx)$
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-case-conflict
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  - repo: https://github.com/returntocorp/semgrep
+    rev: v1.177.0
+    hooks:
+      - id: semgrep
+        args:
+          - '--config=auto'
+          - '--error'
+          - '--exclude-rule=yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag'
+
+  # Gitleaks security scanning
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  # Fix common misspellings in text files
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3
+    hooks:
+      - id: codespell
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.8
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        args: [-c=.yamllint.yml]
+        types: [yaml]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+        args: [-config-file=.github/actionlint.yaml]
+
+  - repo: https://github.com/mpalmer/action-validator
+    rev: v0.9.0
+    hooks:
+      - id: action-validator
+
