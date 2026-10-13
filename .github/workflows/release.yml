@@ -9,7 +9,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: Data City - Small
+      labels: [linux]
 
     steps:
     - uses: actions/checkout@v7
