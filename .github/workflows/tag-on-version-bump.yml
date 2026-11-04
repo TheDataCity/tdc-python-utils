@@ -14,7 +14,9 @@ permissions:
 
 jobs:
   tag:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: Data City - Small
+      labels: [linux]
     steps:
       - uses: actions/checkout@v7
         with:
