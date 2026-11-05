@@ -29,8 +29,13 @@ updates:
       default-days: 7
     commit-message:
       prefix: "deps(uv)"
+    # Minor and patch updates share one PR; each major update gets its own, so one
+    # breaking upgrade cannot hold back the rest.
     groups:
       uv-deps:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
