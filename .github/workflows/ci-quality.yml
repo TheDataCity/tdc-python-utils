@@ -1,0 +1,40 @@
+# Scaffold for .github/workflows/ci-quality.yml (jobs appended below).
+# Managed in part by internal-watchmen.
+
+name: CI quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+
+  pip-audit:
+    runs-on:
+      group: OVH Runners - Small
+      labels: [linux]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: TheDataCity/github-actions/.github/actions/lint-pip-audit@v1
+        with:
+          python-version-file: ${{ hashFiles('.python-version') != '' && '.python-version' || 'pyproject.toml' }}
+
+  ruff:
+    runs-on:
+      group: OVH Runners - Small
+      labels: [linux]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: TheDataCity/github-actions/.github/actions/lint-ruff@v1
+
+  semgrep:
+    runs-on:
+      group: OVH Runners - Small
+      labels: [linux]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: TheDataCity/github-actions/.github/actions/lint-semgrep@v1
