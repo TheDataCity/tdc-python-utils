@@ -21,6 +21,19 @@ updates:
         patterns:
           - "*"
 
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(pre-commit)"
+    groups:
+      pre-commit-deps:
+        patterns:
+          - "*"
+
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
