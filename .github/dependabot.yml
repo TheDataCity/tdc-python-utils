@@ -28,7 +28,8 @@ updates:
     cooldown:
       default-days: 7
     commit-message:
-      prefix: "deps(pre-commit)"
+      # [skip ci] in title/commit so PR workflows do not run for hook pin bumps.
+      prefix: "[skip ci] deps(pre-commit)"
     groups:
       pre-commit-deps:
         patterns:

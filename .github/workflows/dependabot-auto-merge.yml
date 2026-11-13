@@ -1,0 +1,53 @@
+# Auto-merge Dependabot pre-commit PRs only (non-major).
+# Uses pull_request_target so this still runs when the PR commit has [skip ci]
+# (that keyword only suppresses push / pull_request workflows).
+name: Dependabot auto-merge
+
+on:
+  pull_request_target:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge-pre-commit:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on:
+      group: Data City - Small
+      labels: [linux]
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # fetch-metadata reports ecosystem as pre_commit (underscore), not pre-commit.
+      # update-type is often empty for pre-commit pins — fall back to title "from X to Y".
+      - name: Merge pre-commit updates
+        if: steps.metadata.outputs.package-ecosystem == 'pre_commit'
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+
+          is_major=false
+          if [[ "${UPDATE_TYPE}" == "version-update:semver-major" ]]; then
+            is_major=true
+          elif [[ -z "${UPDATE_TYPE}" || "${UPDATE_TYPE}" == "null" ]]; then
+            if python3 -c 'import os,re,sys; t=os.environ.get("PR_TITLE",""); m=re.search(r"from\s+v?(\d+)\S*\s+to\s+v?(\d+)", t, re.I); sys.exit(0 if m and m.group(1)!=m.group(2) else 1)'; then
+              is_major=true
+            fi
+          fi
+
+          if [[ "${is_major}" == "true" ]]; then
+            echo "Skipping major pre-commit update"
+            exit 0
+          fi
+
+          # Immediate squash: auto-merge disabled on repo; [skip ci] → no checks to wait on.
+          gh pr merge --squash --delete-branch "$PR_URL"
