@@ -24,7 +24,7 @@ jobs:
         python-version: 3.13
 
     - name: Setup uv
-      uses: astral-sh/setup-uv@v10.0.1
+      uses: astral-sh/setup-uv@v10.3.3
       
     - name: Setup environment
       run: uv sync --frozen
@@ -55,7 +55,7 @@ jobs:
 
     - name: Commit and push
       if: steps.lint.outcome == 'success'
-      uses: stefanzweifel/git-auto-commit-action@v7.2.0
+      uses: stefanzweifel/git-auto-commit-action@v7.2.1
       with:
         commit_message: "style(auto): ruff formatting"
         file_pattern: "src/*.py"
