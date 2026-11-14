@@ -14,9 +14,7 @@ permissions:
 jobs:
 
   pip-audit:
-    runs-on:
-      group: Data City - Small
-      labels: [linux]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: TheDataCity/github-actions/.github/actions/lint-pip-audit@v1
@@ -24,17 +22,13 @@ jobs:
           python-version-file: ${{ hashFiles('.python-version') != '' && '.python-version' || 'pyproject.toml' }}
 
   ruff:
-    runs-on:
-      group: Data City - Small
-      labels: [linux]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: TheDataCity/github-actions/.github/actions/lint-ruff@v1
 
   semgrep:
-    runs-on:
-      group: Data City - Small
-      labels: [linux]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: TheDataCity/github-actions/.github/actions/lint-semgrep@v1
