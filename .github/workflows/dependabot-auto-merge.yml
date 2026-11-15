@@ -13,7 +13,9 @@ permissions:
 jobs:
   merge-pre-commit:
     if: github.event.pull_request.user.login == 'dependabot[bot]'
-    runs-on: ubuntu-latest
+    runs-on:
+      group: Data City - Small
+      labels: [linux]
     steps:
       - name: Dependabot metadata
         id: metadata
