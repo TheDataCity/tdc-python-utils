@@ -10,6 +10,7 @@ __all__ = [
     "date_handler",
     "duckdb_connector",
     "paths",
+    "r2",
     "r2_storage_downloader",
     "timer",
     "url_downloader",
