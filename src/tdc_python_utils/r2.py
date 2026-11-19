@@ -20,7 +20,8 @@ from botocore.exceptions import ClientError
 
 logger = logging.getLogger(__name__)
 
-# 256 MiB parts keep multi-GB files well under the limit of 10,000 parts.
+# 256 MiB parts, against boto3's default of 8 MiB, need far fewer requests for a
+# multi-GB file. Files under 256 MiB move in one request.
 _TRANSFER_CONFIG = TransferConfig(
     multipart_threshold=256 * 1024 * 1024,
     multipart_chunksize=256 * 1024 * 1024,
