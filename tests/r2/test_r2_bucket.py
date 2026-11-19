@@ -31,6 +31,10 @@ def read(bucket: R2Bucket, key: str) -> bytes:
     return bucket.client.get_object(Bucket=bucket.name, Key=key)["Body"].read()
 
 
+def content_type(bucket: R2Bucket, key: str) -> str:
+    return bucket.client.head_object(Bucket=bucket.name, Key=key)["ContentType"]
+
+
 def keys(bucket: R2Bucket) -> set[str]:
     response = bucket.client.list_objects_v2(Bucket=bucket.name)
     return {obj["Key"] for obj in response.get("Contents", [])}
@@ -174,6 +178,14 @@ class TestUploadDirectory:
             "pipeline/2026-11-19/tables/detail.parquet",
         }
         assert read(bucket, "pipeline/2026-11-19/tables/detail.parquet") == b"detail"
+
+    def test_sets_the_content_type_from_the_file_name(
+        self, bucket: R2Bucket, output: Path
+    ) -> None:
+        bucket.upload_directory(output, "pipeline")
+
+        assert content_type(bucket, "pipeline/manifest.json") == "application/json"
+        assert content_type(bucket, "pipeline/summary.csv") == "text/csv"
 
     def test_missing_last_file_uploads_nothing(
         self, bucket: R2Bucket, output: Path, uploaded: list[str]

@@ -7,6 +7,7 @@ effects: it adds no log handler, and it does not load a ``.env`` file.
 from __future__ import annotations
 
 import logging
+import mimetypes
 import os
 import posixpath
 from dataclasses import dataclass
@@ -51,7 +52,9 @@ class R2Bucket:
     - ``upload_directory(directory, prefix, last)`` uploads each file under
       ``directory`` to ``<prefix>/<path relative to directory>``. ``last`` is a
       relative path, such as ``"manifest.json"``: that file goes after all the
-      others, so a reader never sees a new manifest beside old files.
+      others, so a reader never sees a new manifest beside old files. Each
+      object's ``Content-Type`` comes from its file name, as s3fs and the aws
+      CLI set it; a file with an unknown extension gets none.
     """
 
     client: BaseClient
@@ -125,5 +128,12 @@ class R2Bucket:
 
         for relative, path in files.items():
             key = posixpath.join(prefix, relative)
-            self.client.upload_file(str(path), self.name, key, Config=_TRANSFER_CONFIG)
+            content_type, _ = mimetypes.guess_type(path.name)
+            self.client.upload_file(
+                str(path),
+                self.name,
+                key,
+                ExtraArgs={"ContentType": content_type} if content_type else None,
+                Config=_TRANSFER_CONFIG,
+            )
             logger.info(f"Uploaded {path} to r2://{self.name}/{key}")
