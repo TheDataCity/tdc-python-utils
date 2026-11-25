@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -196,3 +197,47 @@ class TestUploadDirectory:
             bucket.upload_directory(output, "pipeline", last="manifest.json")
 
         assert uploaded == []
+
+
+class TestBucketNameStaysOutOfMessages:
+    """Some teams keep the bucket name secret, and only CI job logs mask secrets."""
+
+    @pytest.fixture(autouse=True)
+    def info_logs(self, caplog: pytest.LogCaptureFixture) -> None:
+        caplog.set_level(logging.INFO, logger="tdc_python_utils.r2")
+
+    def test_download_log(
+        self, bucket: R2Bucket, tmp_path: Path, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        put(bucket, "inputs/lookup.csv")
+
+        bucket.download("inputs/lookup.csv", tmp_path / "lookup.csv")
+
+        assert "inputs/lookup.csv" in caplog.text
+        assert bucket.name not in caplog.text
+
+    def test_download_missing_key_error(self, bucket: R2Bucket, tmp_path: Path) -> None:
+        with pytest.raises(FileNotFoundError) as excinfo:
+            bucket.download("inputs/missing.csv", tmp_path / "missing.csv")
+
+        assert "inputs/missing.csv" in str(excinfo.value)
+        assert bucket.name not in str(excinfo.value)
+        # Error trackers also send the chained boto3 error.
+        assert bucket.name not in str(excinfo.value.__cause__)
+
+    def test_latest_key_error(self, bucket: R2Bucket) -> None:
+        with pytest.raises(FileNotFoundError) as excinfo:
+            bucket.latest_key("inputs/", ".csv")
+
+        assert "inputs/" in str(excinfo.value)
+        assert bucket.name not in str(excinfo.value)
+
+    def test_upload_directory_log(
+        self, bucket: R2Bucket, tmp_path: Path, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        (tmp_path / "summary.csv").write_bytes(b"summary")
+
+        bucket.upload_directory(tmp_path, "pipeline")
+
+        assert "pipeline/summary.csv" in caplog.text
+        assert bucket.name not in caplog.text

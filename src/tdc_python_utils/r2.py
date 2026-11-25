@@ -91,9 +91,9 @@ class R2Bucket:
             )
         except ClientError as exc:
             if exc.response.get("Error", {}).get("Code") in _NOT_FOUND_CODES:
-                raise FileNotFoundError(f"No object at r2://{self.name}/{key}") from exc
+                raise FileNotFoundError(f"No R2 object at {key}") from exc
             raise
-        logger.info(f"Downloaded r2://{self.name}/{key} to {path}")
+        logger.info(f"Downloaded {key} to {path}")
         return path
 
     def latest_key(self, prefix: str, suffix: str = "") -> str:
@@ -107,7 +107,7 @@ class R2Bucket:
         newest = max(objects, key=lambda obj: obj["LastModified"], default=None)
         if newest is None:
             raise FileNotFoundError(
-                f"No object in r2://{self.name}/{prefix}* ends with {suffix!r}"
+                f"No R2 object under {prefix}* ends with {suffix!r}"
             )
         return newest["Key"]
 
@@ -136,4 +136,4 @@ class R2Bucket:
                 ExtraArgs={"ContentType": content_type} if content_type else None,
                 Config=_TRANSFER_CONFIG,
             )
-            logger.info(f"Uploaded {path} to r2://{self.name}/{key}")
+            logger.info(f"Uploaded {path} to {key}")
