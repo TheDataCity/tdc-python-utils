@@ -94,6 +94,19 @@ class TestFromEnv:
         assert bucket.name == "pipeline-bucket"
         assert "fake-secret-not-real" not in repr(bucket)
 
+    def test_repr_does_not_show_the_bucket_name(
+        self, clean_env: pytest.MonkeyPatch
+    ) -> None:
+        clean_env.setenv("R2_ACCESS_KEY_ID", "fake-access-key-id")
+        clean_env.setenv("R2_SECRET_ACCESS_KEY", "fake-secret-not-real")
+        clean_env.setenv("R2_ACCOUNT_ID", "fake-account")
+        clean_env.setenv("R2_BUCKET", "example-placeholder-bucket")
+
+        bucket = R2Bucket.from_env()
+
+        assert bucket.name == "example-placeholder-bucket"
+        assert "example-placeholder-bucket" not in repr(bucket)
+
 
 class TestDownload:
     def test_replaces_an_old_local_file(self, bucket: R2Bucket, tmp_path: Path) -> None:
