@@ -83,18 +83,7 @@ class TestFromEnv:
         assert "R2_ACCOUNT_ID" not in str(error.value)
         assert "R2_BUCKET" not in str(error.value)
 
-    def test_repr_does_not_show_the_secret(self, clean_env: pytest.MonkeyPatch) -> None:
-        clean_env.setenv("R2_ACCESS_KEY_ID", "fake-access-key-id")
-        clean_env.setenv("R2_SECRET_ACCESS_KEY", "fake-secret-not-real")
-        clean_env.setenv("R2_ACCOUNT_ID", "fake-account")
-        clean_env.setenv("R2_BUCKET", "pipeline-bucket")
-
-        bucket = R2Bucket.from_env()
-
-        assert bucket.name == "pipeline-bucket"
-        assert "fake-secret-not-real" not in repr(bucket)
-
-    def test_repr_does_not_show_the_bucket_name(
+    def test_repr_does_not_show_the_secret_or_bucket_name(
         self, clean_env: pytest.MonkeyPatch
     ) -> None:
         clean_env.setenv("R2_ACCESS_KEY_ID", "fake-access-key-id")
@@ -105,6 +94,7 @@ class TestFromEnv:
         bucket = R2Bucket.from_env()
 
         assert bucket.name == "example-placeholder-bucket"
+        assert "fake-secret-not-real" not in repr(bucket)
         assert "example-placeholder-bucket" not in repr(bucket)
 
 
