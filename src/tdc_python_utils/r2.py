@@ -10,7 +10,7 @@ import logging
 import mimetypes
 import os
 import posixpath
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import boto3
@@ -37,7 +37,8 @@ class R2Bucket:
     """A boto3 S3 client bound to one R2 bucket.
 
     Only the client and the bucket name are fields, so the secret key is never in
-    a field that ``repr``, a log line or a Sentry event can show.
+    a field that ``repr``, a log line or a Sentry event can show. ``repr`` also
+    leaves out the bucket name.
 
     - ``from_env()`` reads ``R2_ACCESS_KEY_ID``, ``R2_SECRET_ACCESS_KEY`` and
       ``R2_BUCKET``, and ``R2_ACCOUNT_ID`` unless ``R2_ENDPOINT_URL`` is set. One
@@ -58,7 +59,7 @@ class R2Bucket:
     """
 
     client: BaseClient
-    name: str
+    name: str = field(repr=False)
 
     @classmethod
     def from_env(cls) -> R2Bucket:
